@@ -48,6 +48,7 @@ Quan canviïs el codi, prem **Recarrega** a la targeta de l'extensió a `chrome:
 | **Atura** | Acaba l'element en curs, atura l'extracció i baixa automàticament el CSV amb el que s'ha fet fins ara. Mantén el popup obert fins que es baixi. |
 | **Baixa CSV** | Una fila per alumne i element (format llarg). |
 | **Baixa taula CSV** | Taula creuada: una fila per alumne i les columnes agrupades per mòdul i, dins de cada mòdul, els seus RA. |
+| **Baixa taula JSON** | La taula creuada en JSON: un objecte per alumne amb les qualificacions agrupades per mòdul i RA. |
 | **Baixa JSON** | Les mateixes dades que el CSV, en JSON. |
 | **Neteja** | Esborra les dades desades de l'extensió. |
 
@@ -104,6 +105,7 @@ no els pugis al repositori.
 ```
 extensio-extractor/
 ├── manifest.json   # Manifest V3; permisos: activeTab, scripting, storage
+├── icons/          # Logo de l'extensió (16, 32, 48 i 128 px)
 ├── popup.html      # Interfície del popup
 └── popup.js        # Recorregut, extracció i exportació
 ```

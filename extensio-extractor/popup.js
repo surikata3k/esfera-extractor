@@ -129,7 +129,7 @@ function pinta(e) {
   $("errors").textContent = e.errors.join("\n");
   $("inicia").disabled = enMarxa;
   $("atura").disabled = !enMarxa;
-  $("csv").disabled = $("json").disabled = $("taula").disabled = !e.files.length;
+  $("csv").disabled = $("json").disabled = $("taula").disabled = $("taulaJson").disabled = !e.files.length;
   $("neteja").disabled = enMarxa;
 }
 
@@ -186,7 +186,7 @@ function clauModul(codi) {
   return { modul: p.slice(0, i + 1).join("_"), ra: p.slice(i + 1).join("_") };
 }
 
-function baixaTaula(e) {
+function construeixTaula(e) {
   const moduls = new Map(); // modul -> { nom, ras: Map(ra -> etiqueta) }
   const alumnes = new Map(); // idAlumne -> { dades, notes: Map("modul|ra" -> valor) }
   for (const f of e.files) {
@@ -204,6 +204,11 @@ function baixaTaula(e) {
   for (const [modul, m] of moduls) {
     if (!m.nom) m.nom = e.files.find((f) => clauModul(f.modulCodi).modul === modul)?.modulNom || "";
   }
+  return { moduls, alumnes };
+}
+
+function baixaTaula(e) {
+  const { moduls, alumnes } = construeixTaula(e);
   const fix = ["", "", "", "", ""];
   const cap1 = [...fix], cap2 = ["Id. alumne", "1r cognom", "2n cognom", "Nom", "Document"];
   for (const [modul, m] of moduls) {
@@ -224,6 +229,21 @@ function baixaTaula(e) {
 }
 
 $("taula").addEventListener("click", async () => baixaTaula(await actual()));
+
+// Mateixa taula creuada en JSON: un objecte per alumne amb les notes agrupades per mòdul i RA
+function baixaTaulaJson(e) {
+  const { moduls, alumnes } = construeixTaula(e);
+  const dades = [...alumnes.values()].map(({ dades: d, notes }) => ({
+    idAlumne: d[0], cognom1: d[1], cognom2: d[2], nom: d[3], document: d[4],
+    moduls: Object.fromEntries([...moduls].map(([modul, m]) => [modul, {
+      nom: m.nom,
+      qualificacions: Object.fromEntries([...m.ras.keys()].map((ra) => [ra || "Global", notes.get(modul + "|" + ra) ?? ""])),
+    }])),
+  }));
+  baixa("qualificacions-taula.json", JSON.stringify(dades, null, 2), "application/json");
+}
+
+$("taulaJson").addEventListener("click", async () => baixaTaulaJson(await actual()));
 
 $("json").addEventListener("click", async () => {
   const e = await actual();
