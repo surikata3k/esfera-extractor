@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="ca">
+<head>
+  <meta charset="utf-8">
+  <style>
+    body { font: 13px system-ui, sans-serif; width: 340px; margin: 0; padding: 12px; }
+    h1 { font-size: 15px; margin: 0 0 8px; }
+    .row { display: flex; gap: 6px; margin-bottom: 8px; }
+    button { flex: 1; padding: 6px; cursor: pointer; }
+    progress { width: 100%; height: 14px; }
+    #estat { margin: 6px 0; min-height: 2.6em; color: #333; }
+    #errors { color: #a00; font-size: 12px; max-height: 80px; overflow: auto; }
+    small { color: #666; }
+  </style>
+</head>
+<body>
+  <h1>Esfer@ · extractor de qualificacions</h1>
+  <small>Obre la llista «Qualificacions per al tutor del grup» i prem Inicia. No tanquis la pestanya mentre s'executa.</small>
+  <div class="row" style="margin-top:8px">
+    <button id="inicia">Inicia</button>
+    <button id="atura" disabled>Atura</button>
+  </div>
+  <progress id="barra" value="0" max="1"></progress>
+  <div id="estat">Preparat.</div>
+  <div class="row">
+    <button id="csv" disabled>Baixa CSV</button>
+    <button id="taula" disabled>Baixa taula CSV</button>
+  </div>
+  <div class="row">
+    <button id="json" disabled>Baixa JSON</button>
+    <button id="neteja" disabled>Neteja</button>
+  </div>
+  <div id="errors"></div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Esfer@ extractor de qualificacions",
+  "version": "2.0.0",
+  "description": "Recorre cada enllaç «Modifica» de la llista d'Esfer@ (Qualificacions per al tutor del grup) i extreu la taula d'alumnes de cada element curricular.",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://bfgh.aplicacions.ensenyament.gencat.cat/*"],
+  "action": {
+    "default_title": "Extreu qualificacions d'Esfer@",
+    "default_popup": "popup.html"
+  }
+}
