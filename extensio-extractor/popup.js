@@ -77,7 +77,8 @@ async function recorreLlista() {
         ? element.slice(iDash + 1, iNeg >= 0 ? iNeg : undefined).trim() : "";
       // Mòdul codi separat per "_": Mòdul, Cicle i RA (si en sobren parts, van a RA)
       const [modul = "", cicle = "", ...resta] = modulCodi.split("_");
-      const ra = resta.join("_");
+      // 01RA -> RA01, 01EM -> EM01 (la part numèrica al final)
+      const ra = resta.join("_").replace(/^(\d+)([A-Za-z]+)$/, "$2$1");
       // Qualificació: valor numèric després del primer "-"; si no n'hi ha, es deixa el valor original
       const numero = (s) => {
         const d = s.indexOf("-");
@@ -194,7 +195,7 @@ function construeixTaula(e) {
     if (!moduls.has(modul)) moduls.set(modul, { nom: "", ras: new Map() });
     const m = moduls.get(modul);
     if (!ra) m.nom = f.modulNom;
-    if (!m.ras.has(ra)) m.ras.set(ra, ra || "Global");
+    if (!m.ras.has(ra)) m.ras.set(ra, ra ? ra.replace(/^(\d+)([A-Za-z]+)$/, "$2$1") : "Global");
     if (!alumnes.has(f.idAlumne)) {
       alumnes.set(f.idAlumne, { dades: [f.idAlumne, f.cognom1, f.cognom2, f.nom, f.document], notes: new Map() });
     }
@@ -237,7 +238,7 @@ function baixaTaulaJson(e) {
     idAlumne: d[0], cognom1: d[1], cognom2: d[2], nom: d[3], document: d[4],
     moduls: Object.fromEntries([...moduls].map(([modul, m]) => [modul, {
       nom: m.nom,
-      qualificacions: Object.fromEntries([...m.ras.keys()].map((ra) => [ra || "Global", notes.get(modul + "|" + ra) ?? ""])),
+      qualificacions: Object.fromEntries([...m.ras].map(([ra, etiqueta]) => [etiqueta, notes.get(modul + "|" + ra) ?? ""])),
     }])),
   }));
   baixa("qualificacions-taula.json", JSON.stringify(dades, null, 2), "application/json");
